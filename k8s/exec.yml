@@ -1,0 +1,34 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: exec
+spec:
+  selector:
+    matchLabels:
+      app: exec
+  template:
+    metadata:
+      labels:
+        app: exec
+    spec:
+      containers:
+        - name: exec
+          # 여러분의 backend image 주소를 입력해주세요.
+          image: krmp-d2hub-idock.9rum.cc/dev-test/repo_0cec46ce620e
+          depends_on:
+            - db
+          resources:
+            requests:
+              memory: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: exec
+spec:
+  selector:
+    app: exec
+  ports:
+    - port: 3001
+      targetPort: 3001

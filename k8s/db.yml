@@ -1,0 +1,65 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+spec:
+  serviceName: db
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+        - name: db
+          # 여러분의 mariadb image 주소를 입력해주세요.
+          image:
+          env:
+            - name: TZ
+              value: Asia/Seoul
+            - name: POSTGRES_PASSWORD
+              value: n1234
+            - name: POSTGRES_DB
+              value: postgres
+            # - name: MARIADB_DISABLE_UPGRADE_BACKUP
+            #   value: '1'
+          volumeMounts:
+            - mountPath: /var/lib/postgres
+              name: data
+              subPath: postgres
+            - mountPath: /docker-entrypoint-initdb.d
+              name: init-db
+          resources:
+            limits:
+              memory: 1Gi
+          readinessProbe:
+            tcpSocket:
+              port: 5432
+      volumes:
+        - name: init-db
+          configMap:
+            name: init-db
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+spec:
+  type: ClusterIP
+  clusterIP: None # Headless
+  selector:
+    app: db
+  ports:
+    - port: 5432
