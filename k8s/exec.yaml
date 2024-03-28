@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: exec
+spec:
+  selector:
+    matchLabels:
+      app: exec
+  template:
+    metadata:
+      labels:
+        app: exec
+    spec:
+      containers:
+        - name: exec
+          image: krmp-d2hub-idock.9rum.cc/dev-test/repo_788c0bad48ab
+          depends_on:
+            - db
+          resources:
+            requests:
+              memory: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: exec
+spec:
+  selector:
+    app: exec
+  ports:
+    - port: 4000
+      targetPort: 4000
