@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: db
-          image: krmp-d2hub-idock.9rum.cc/dev-test/repo_997c6f85ebd4
+          image: krmp-d2hub-idock.9rum.cc/dev-test/repo_a53bba736c86
           env:
             - name: TZ
               value: Asia/Seoul
